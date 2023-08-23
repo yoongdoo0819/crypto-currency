@@ -2,19 +2,28 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
 
 	"github.com/nomadcoders/nomadcoin/blockchain"
 )
 
-func main() {
+const port string = ":4000"
 
-	chain := blockchain.GetBlockchain()
-	chain.AddBlock("Second Block")
-	chain.AddBlock("Third Block")
-	chain.AddBlock("Four Block")
-	for _, block := range chain.AllBlocks() {
-		fmt.Printf("Data : %s \n", block.Data)
-		fmt.Printf("Hash : %s \n", block.Hash)
-		fmt.Printf("Prev Hash : %s \n", block.PrevHash)
-	}
+type homeData struct {
+	PageTitle string
+	Blocks    []*blockchain.Block
+}
+
+func home(rw http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/home.html"))
+	data := homeData{"Home", blockchain.GetBlockchain().AllBlocks()}
+	tmpl.Execute(rw, data)
+}
+
+func main() {
+	http.HandleFunc("/", home)
+	fmt.Printf("Listening on http://localhost%s", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
