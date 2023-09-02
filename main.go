@@ -1,11 +1,29 @@
 package main
 
 import (
-	"github.com/nomadcoders/nomadcoin/explorer"
-	"github.com/nomadcoders/nomadcoin/rest"
+	"fmt"
+	"os"
 )
 
+func usage() {
+	fmt.Println("Welcome !!")
+	fmt.Println("Please use the following commands")
+	fmt.Println("explorer: Start the HTML Explorer")
+	fmt.Println("rest: Start the REST API")
+	os.Exit(0)
+}
+
 func main() {
-	go explorer.Start(3000)
-	rest.Start(4000)
+	if len(os.Args) < 2 {
+		usage()
+	}
+
+	switch os.Args[1] {
+	case "explorer":
+		fmt.Println("Start Explorer")
+	case "rest":
+		fmt.Println("Start REST APi")
+	default:
+		usage()
+	}
 }
