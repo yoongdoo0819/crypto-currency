@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/nomadcoders/nomadcoin/blockchain"
 )
 
@@ -39,11 +40,11 @@ func add(rw http.ResponseWriter, r *http.Request) {
 }
 
 func Start(port int) {
-	handler := http.NewServeMux()
+	handler := mux.NewRouter()
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
 	handler.HandleFunc("/", home)
 	handler.HandleFunc("/add", add)
-	fmt.Printf("Listening on http://localhost:%d", port)
+	fmt.Printf("Listening on http://localhost:%d \n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), handler))
 }
