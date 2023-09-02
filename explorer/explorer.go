@@ -40,11 +40,14 @@ func add(rw http.ResponseWriter, r *http.Request) {
 }
 
 func Start(port int) {
-	handler := mux.NewRouter()
+
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
-	handler.HandleFunc("/", home)
-	handler.HandleFunc("/add", add)
+
+	router := mux.NewRouter()
+	router.HandleFunc("/", home)
+	router.HandleFunc("/add", add)
+
 	fmt.Printf("Listening on http://localhost:%d \n", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), handler))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), router))
 }
