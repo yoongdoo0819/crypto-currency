@@ -87,7 +87,7 @@ func (b *blockchain) UTxOutsByAddress(address string) []*UTxOut {
 		for _, tx := range block.Transactions {
 			for _, input := range tx.TxIns {
 				if input.Owner == address {
-					creatorTxs[input.TxId] = true
+					creatorTxs[input.TxID] = true
 				}
 			}
 			for index, output := range tx.TxOuts {
