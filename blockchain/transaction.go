@@ -17,14 +17,14 @@ type mempool struct {
 var Mempool *mempool = &mempool{}
 
 type Tx struct {
-	Id        string   `json:"id"`
+	ID        string   `json:"id"`
 	Timestamp int      `json:"timestamp"`
 	TxIns     []*TxIn  `json:"txIns"`
 	TxOuts    []*TxOut `json:"txOuts"`
 }
 
 func (t *Tx) getId() {
-	t.Id = utils.Hash(t)
+	t.ID = utils.Hash(t)
 }
 
 type TxIn struct {
@@ -39,9 +39,9 @@ type TxOut struct {
 }
 
 type UTxOut struct {
-	TxId   string
-	Index  int
-	Amount int
+	TxId   string `json:"txId"`
+	Index  int    `json:"index"`
+	Amount int    `json:"amount"`
 }
 
 func makeCoinBaseTx(address string) *Tx {
@@ -52,7 +52,7 @@ func makeCoinBaseTx(address string) *Tx {
 		{address, minerReward},
 	}
 	tx := Tx{
-		Id:        "",
+		ID:        "",
 		Timestamp: int(time.Now().Unix()),
 		TxIns:     txIns,
 		TxOuts:    txOuts,
