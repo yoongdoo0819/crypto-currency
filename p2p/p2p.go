@@ -34,6 +34,5 @@ func AddPeer(address, port, openPort string) {
 	conn, _, err := websocket.DefaultDialer.Dial(fmt.Sprintf("ws://%s:%s/ws?openPort=%s", address, port, openPort[1:]), nil)
 	utils.HandleErr(err)
 	peer := initPeer(conn, address, port)
-	time.Sleep(3 * time.Second)
-	peer.inbox <- []byte("Hello from 4000!")
+	sendNewestBlock(peer)
 }
