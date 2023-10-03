@@ -37,6 +37,16 @@ func sendNewestBlock(p *peer) {
 	p.inbox <- m
 }
 
+func reqeustAllBlocks(p *peer) {
+	m := makeMessage(MessageAllBlocksRequest, nil)
+	p.inbox <- m
+}
+
+func sendAllBlocks(p *peer) {
+	m := makeMessage(MessageAllBlocksResponse, blockchain.Blocks(blockchain.Blockchain()))
+	p.inbox <- m
+}
+
 func handleMsg(m *Message, p *peer) {
 	fmt.Printf("Peer : %s sent a message with kind of : %d \n", p.key, m.Kind)
 
@@ -44,6 +54,20 @@ func handleMsg(m *Message, p *peer) {
 	case MessageNewestBlock:
 		var payload blockchain.Block
 		utils.HandleErr(json.Unmarshal(m.Payload, &payload))
-		fmt.Println(payload)
+		b, err := blockchain.FindBlock(blockchain.Blockchain().NewestHash)
+		utils.HandleErr(err)
+
+		if payload.Height >= b.Height {
+			// request all the blocks from 4000
+			reqeustAllBlocks(p)
+		} else {
+			// send 4000 our blocks
+			sendNewestBlock(p)
+		}
+	case MessageAllBlocksRequest:
+		sendAllBlocks(p)
+	case MessageAllBlocksResponse:
+		var payload []*blockchain.Block
+		utils.HandleErr(json.Unmarshal(m.Payload, &payload))
 	}
 }
