@@ -38,7 +38,7 @@ func sendNewestBlock(p *peer) {
 }
 
 func handleMsg(m *Message, p *peer) {
-	fmt.Printf("Peer : %s sent a message with kind of : %d", p.key, m.Kind)
+	fmt.Printf("Peer : %s sent a message with kind of : %d \n", p.key, m.Kind)
 
 	switch m.Kind {
 	case MessageNewestBlock:
